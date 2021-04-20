@@ -96,8 +96,8 @@ void Convolution2D(float* h_in, float* h_out, int width, int height, float* h_ke
     gpuErrchk(cudaMemcpy(d_kernel, h_kernel, kernelSizeInByte, cudaMemcpyHostToDevice));
     //call the kernel
     dim3 blockSize(32, 32);
-    dim3 gridSize(3, 3);
-    general2DConvolution << <blockSize, gridSize >> > (d_in, d_out, width, height, d_kernel, kernelWidth, kernelHeight);
+    dim3 gridSize(16, 16);
+    general2DConvolution << <gridSize, blockSize >> > (d_in, d_out, width, height, d_kernel, kernelWidth, kernelHeight);
     //copy data back
     gpuErrchk(cudaMemcpy(h_out, d_out, imageSizeInByte, cudaMemcpyDeviceToHost));
     //free memory
@@ -106,7 +106,3 @@ void Convolution2D(float* h_in, float* h_out, int width, int height, float* h_ke
     gpuErrchk(cudaFree(d_kernel));
 }
 
-void cudaFunction(){
-	//checkId <<< 3, 3 >>> ();
-    printDeviceInfo();
-}
